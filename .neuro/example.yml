@@ -1,0 +1,16 @@
+kind: batch
+tasks:
+  - id: checkout
+    action: gh:neuro-actions/checkout@v1
+    args:
+      clone_uri: https://github.com/neuro-actions/checkout.git
+      checkout_to: "storage:"
+      checkout_subpath: dir/to/clone/into
+  - id: check_repo
+    needs: [checkout]
+    image: neuromation/neuro-flow:21.3.17
+    volumes:
+      - storage::/mnt/storage
+    bash: |
+      cd /mnt/storage/dir/to/clone/into
+      git status
