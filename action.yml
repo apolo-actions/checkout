@@ -1,0 +1,80 @@
+kind: batch
+name: Clone a git repository
+author: Roman Skurikhin
+cache:
+    strategy: "none"
+inputs:
+  clone_uri:
+    descr: URI of repository to clone
+  clone_depth:
+    default: "1"
+    descr: Amount of commits to clone. Use 0 to fetch all history
+  ref:
+    default: ''
+    descr: A branch, SHA or tag to checkout
+  ssh_key_secret:
+    default: ''
+    descr: |
+      Uri of neuro platform secret that contains a ssh key.
+  checkout_to:
+    descr: |
+      A storage or a disk uri to use as volume to clone a repo
+  checkout_subpath:
+    default: .
+    descr: |
+      Relative path under 'checkout_to' volume to place the repository
+  erase_subpath:
+    default: "false"
+    descr: Should subpath folder be erased before cloning.
+outputs:
+   needs: [clone_repo]
+   head_sha:
+     value: ${{ needs.clone_repo.outputs.head_sha }}
+     descr: SHA of the commit at HEAD
+tasks:
+  - id: clone_repo
+    pass_config: True
+    # Next line contains magic trick to implement "if_else":
+    # (bool and A) or B
+    # If 'bool' is true, it will give A
+    # If 'bool' is false, it will give B
+    # (this requires A to resolve to true)
+    volumes: ${{ (inputs.ssh_key_secret != '' and
+                 [inputs.checkout_to + ':/mnt/volume', inputs.ssh_key_secret + ':/mnt/secret/private_key']) or
+                 [inputs.checkout_to + ':/mnt/volume' ]
+      }}
+    image: neuromation/neuro-flow:21.3.17
+    python: |
+      import os
+      import sys
+      import subprocess
+      import shutil
+      from pathlib import Path
+
+      path = Path("/mnt/volume")
+      subpath = Path("${{inputs.checkout_subpath}}")
+      erase_subpath = "${{ inputs.erase_subpath }}" == "true"
+      ssh_key_file = Path("/mnt/secret/private_key")
+      clone_uri = "${{ inputs.clone_uri }}"
+      clone_depth = "${{ inputs.clone_depth }}"
+      ref = "${{ inputs.ref }}"
+
+      dir = path / subpath
+      dir.mkdir(parents=True, exist_ok=True)
+      if erase_subpath:
+         shutil.rmtree(dir)
+         dir.mkdir()
+      os.chdir(dir)
+
+      if ssh_key_file.exists():
+          os.environ["GIT_SSH_COMMAND"] = f"ssh -i {ssh_key_file} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+
+      git_options = []
+      if clone_depth and clone_depth != "0":
+          git_options += ["--depth", clone_depth]
+      if ref:
+          git_options += ["--branch", ref]
+
+      subprocess.run(["git", "clone", *git_options, clone_uri, "."], check=True)
+      result = subprocess.run(["git", "rev-parse", "HEAD"], check=True, stdout=subprocess.PIPE)
+      print(f'::set-output name=head_sha::{result.stdout.decode()}')
