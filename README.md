@@ -1,7 +1,6 @@
 # [Neuro Flow](https://github.com/neuro-inc/neuro-flow) git checkout action
 
-This batch mode actions checkouts are repository to provided volume, to 
-make it available to your workflow. Fetches only single commit by default.
+This batch mode action checkouts a repository to the provided volume to make it available in your workflow. By default, it only fetches a single commit.
 
 ## Quick example:
 
@@ -19,7 +18,7 @@ tasks:
 
 ### `clone_uri`
 
-The git repository url to clone. Both `https://` and `git@` are supported.
+The URL of the Git repository you want to clone. Both `https://` and `git@` notations are supported.
 
 ##### Example
 ```
@@ -27,12 +26,11 @@ args:
   clone_uri: https://github.com/neuro-actions/checkout.git
 ```
 
-Note that you should provide a `ssh_key_secret` when you using ssh clone (`git@...`). 
+Note that you should provide a `ssh_key_secret` when using the SSH clone notation (`git@...`). 
 
 ### `clone_depth`
 
-Number of commits to fetch. `"1"` by default, which means to clone only single commit.
-To clone all repo, set `"0"`. 
+Number of commits to fetch. `"1"` by default, which means only a single commit will be cloned. To clone the entire repo, set this to `"0"`. 
 
 ##### Example
 ```
@@ -42,8 +40,7 @@ args:
 
 ### `ref`
 
-A name of branch, git tag or a commit SHA to fetch. Will use remote default branch 
-(more precisly, remote HEAD) by default.
+Name of a branch, Git tag, or a commit SHA to fetch. Uses the remote HEAD by default.
 
 ##### Example
 ```
@@ -53,11 +50,9 @@ args:
 
 ### `ssh_key_secret`
 
-A uri of [neuro platform secret](https://docs.neu.ro/core/secrets) that contains
-ssh private key to use for cloning.
+A URI of a [Neu.ro platform secret](https://docs.neu.ro/core/secrets) that contains an SSH private key to use for cloning.
 
-If you are on unix machine with default configuration, you can upload your current
-private key by this command:
+If you're using a Unix machine with default configuration, you can upload your current private key by using this command:
 
 ```bash
 neuro secret add git_ssh_private_key @~/.ssh/id_rsa
@@ -71,20 +66,19 @@ args:
 
 ### `checkout_to`
 
-A uri of storage folder or disk to use as volume for checkout. When using 
-disk, you can use `checkout_subpath` to specify directory to checkout.
+A URI of a storage folder or disk to use as a volume for checkout. When using a disk, you can specify the directory to checkout via `checkout_subpath`.
 
-Note that for `storage:` volumes, the corresponding directory should exist.
-If you want to automatically create subdirectory, use `checkout_subpath`.
+Note that the corresponding directory should exist for `storage:` volumes. 
+If you want to automatically create a sub-directory, use `checkout_subpath`.
 
 ##### Examples
-Storage based volume
+Storage-based volume
 ```
 args:
   checkout_to: storage:dir/to/checkout
 ```
 
-Disk based volume
+Disk-based volume
 ```
 args:
   checkout_to: disk:disk_name_or_id
@@ -92,8 +86,8 @@ args:
 
 ### `checkout_subpath`
 
-A relative path under `checkout_to` to use as directory to clone to.
-If such folder does not exits, it will be automatically created.
+A relative path under `checkout_to` to use as a cloning destination directory. 
+If such folder doesn't exist, it will be automatically created.
 
 ##### Example
 ```
@@ -103,9 +97,8 @@ args:
 
 ### `erase_subpath`
 
-Enables purging of directory specified by `checkout_subpath`. Use with caution,
-this is same as running `rm -rf checkout_subpath` command!
-To enable, set input to `"true"`.
+Enables purging of the directory specified by `checkout_subpath`. Use with caution, as this is the same 
+as running the `rm -rf checkout_subpath` command. To enable this feature, set input to `"true"`.
 
 ##### Example
 ```
@@ -117,10 +110,9 @@ args:
 
 ### `head_sha`
 
-A SHA of the commit the is under current HEAD in cloned repository.
-This output main goal is to make this action cache-friendly -
-even the repository did not changed, that output will be the same
-and depending action can safely use the cache.
+A SHA of the commit under the current HEAD in the cloned repository. 
+This output's main goal is to make the action cache-friendly - 
+even if the repository didn't change, that output will be the same and the depending action can safely use the cache.
 
 
 
