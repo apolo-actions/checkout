@@ -40,7 +40,7 @@ args:
 
 ### `ref`
 
-Name of a branch, Git tag, or a commit SHA to fetch. Uses the default remote HEAD by default.
+Name of a branch, Git tag, or a commit SHA to fetch. Uses the remote HEAD by default.
 
 ##### Example
 ```
