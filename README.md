@@ -1,4 +1,4 @@
-# [Neuro Flow](https://github.com/neuro-inc/neuro-flow) git checkout action
+# [Apolo Flow](https://github.com/neuro-inc/neuro-flow) git checkout action
 
 This batch mode action checkouts a repository to the provided volume to make it available in your workflow. By default, it only fetches a single commit.
 
@@ -7,9 +7,9 @@ This batch mode action checkouts a repository to the provided volume to make it 
 ```
 tasks:
   - id: checkout
-    action: gh:neuro-actions/checkout@v1
+    action: gh:apolo-actions/checkout@v1
     args:
-      clone_uri: https://github.com/neuro-actions/checkout.git
+      clone_uri: https://github.com/apolo-actions/checkout.git
       checkout_to: "storage:"
       checkout_subpath: dir/to/clone/into
 ```
@@ -23,7 +23,7 @@ The URL of the Git repository you want to clone. Both `https://` and `git@` nota
 ##### Example
 ```
 args:
-  clone_uri: https://github.com/neuro-actions/checkout.git
+  clone_uri: https://github.com/apolo-actions/checkout.git
 ```
 
 Note that you should provide a `ssh_key_secret` when using the SSH clone notation (`git@...`). 
@@ -50,12 +50,12 @@ args:
 
 ### `ssh_key_secret`
 
-A URI of a [Neu.ro platform secret](https://docs.neu.ro/core/secrets) that contains an SSH private key to use for cloning.
+A URI of a [Apolo platform secret](https://docs.apolo.us/index/core/apps/pre-installed/secrets) that contains an SSH private key to use for cloning.
 
 If you're using a Unix machine with default configuration, you can upload your current private key by using this command:
 
 ```bash
-neuro secret add git_ssh_private_key @~/.ssh/id_rsa
+apolo secret add git_ssh_private_key @~/.ssh/id_rsa
 ```
 
 ##### Example

@@ -15,7 +15,7 @@ inputs:
   ssh_key_secret:
     default: ''
     descr: |
-      Uri of neuro platform secret that contains a ssh key.
+      Uri of Apolo platform secret that contains a ssh key.
   checkout_to:
     descr: |
       A storage or a disk uri to use as volume to clone a repo
@@ -43,7 +43,7 @@ tasks:
                  [inputs.checkout_to + ':/mnt/volume', inputs.ssh_key_secret + ':/mnt/secret/private_key']) or
                  [inputs.checkout_to + ':/mnt/volume' ]
       }}
-    image: neuromation/neuro-flow:21.3.17
+    image: ghcr.io/neuro-inc/apolo-flow:24.10.3
     python: |
       import os
       import sys

@@ -1,14 +1,14 @@
 kind: batch
 tasks:
   - id: checkout
-    action: gh:neuro-actions/checkout@v1
+    action: gh:apolo-actions/checkout@v1
     args:
-      clone_uri: https://github.com/neuro-actions/checkout.git
+      clone_uri: https://github.com/apolo-actions/checkout.git
       checkout_to: "storage:"
       checkout_subpath: dir/to/clone/into
   - id: check_repo
     needs: [checkout]
-    image: neuromation/neuro-flow:21.3.17
+    image: ghcr.io/neuro-inc/apolo-flow:24.10.3
     volumes:
       - storage::/mnt/storage
     bash: |
